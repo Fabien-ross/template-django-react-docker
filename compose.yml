@@ -24,8 +24,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    secrets:
-      - db-password
 
   client:
     container_name: react-client
@@ -51,8 +49,6 @@ services:
     container_name: postgres-db
     restart: always
     user: postgres
-    secrets:
-      - db-password
     volumes:
       # db-data is on the host but managed by docker
       # /var/lib/postgresql allows the volume to persist
@@ -64,7 +60,7 @@ services:
     expose:
       - 5432
     healthcheck:
-      test: ["CMD", "pg_isready"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5

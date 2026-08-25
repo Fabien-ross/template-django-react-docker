@@ -6,6 +6,9 @@
   "dockerComposeFile": "../compose.yml",
   "service": "server", // service that runs the app
   "workspaceFolder": "/project", //path inside the container
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
   "customizations": {
     "vscode": {
       "extensions": [
@@ -20,5 +23,10 @@
       }
     }
   },
-  "forwardPorts": [5173] //An array of port numbers or "host:port" values
-} 
+  "forwardPorts": [5173], //An array of port numbers or "host:port" values
+  "portsAttributes": {
+    "5173": {
+        "requireLocalPort": true
+    }
+  }
+}

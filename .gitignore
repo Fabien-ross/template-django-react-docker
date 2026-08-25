@@ -42,7 +42,7 @@ coverage.xml
 cover/
 
 # Environments
-.env
+# .env @@@@@@@@@@IMPORTANT must be uncommented when the project grows (secret leaking risk)
 .env.prod
 .env.dev
 backend/.env
