@@ -42,7 +42,15 @@ coverage.xml
 cover/
 
 # Environments
-#.env  # To be uncommented
+.env
+.env.prod
+.env.dev
+backend/.env
+backend/.env.prod
+backend/.env.dev
+frontend/.env
+frontend/.env.prod
+frontend/.env.dev
 .venv
 env/
 venv/
@@ -66,7 +74,8 @@ dist
 dist-ssr
 *.local
 
-# Editor directories and files
+# Editor directories and file
+frontend/.prettierrc
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -76,3 +85,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+# Backup databases
+/backups

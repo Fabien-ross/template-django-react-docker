@@ -1,29 +1,37 @@
 # syntax=docker/dockerfile:1
 
-# Reference guide at 
-# https://docs.docker.com/go/dockerfile-reference/
-
-# This Dockerfile uses Docker Hardened Images (DHI) for enhanced security.
-
 ARG PYTHON_VERSION=3.12
-FROM python:${PYTHON_VERSION}-slim
 
-# Prevents Python from writing pyc files.
+# ============================================================
+# BASE
+# ============================================================
+
+FROM python:${PYTHON_VERSION}-slim AS base
+
+# Clean installation (no .pyc)
 ENV PYTHONDONTWRITEBYTECODE=1
+# Allow direct logs from python (print, etc.)
+ENV PYTHONUNBUFFERED=1          
 
-# Keeps Python from buffering stdout and stderr to avoid situations where
-# the application crashes without emitting any logs due to buffering.
-ENV PYTHONUNBUFFERED=1
+# The workdir name appears in the compose.yml
+WORKDIR /app
 
-# Container path
-WORKDIR /app 
-
+# Define pip cache / mount requirement in the source / install requirements with pip
 RUN --mount=type=cache,target=/root/.cache/pip \
     --mount=type=bind,source=requirements.txt,target=requirements.txt \
     python -m pip install --upgrade pip -r requirements.txt
 
-# Expose the port that the application listens on.
+# Copy application (backend/ -> app/)
+# COPY . /app/ -> same thing since WORKDIR is there!
+COPY . .
+
+
+# ============================================================
+# DEVELOPMENT
+# ============================================================
+
+FROM base AS development
+
 EXPOSE 8000
 
-# Run the application forever. Useful for dev.
-CMD ["sleep","infinity"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

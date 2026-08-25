@@ -4,13 +4,20 @@ services:
     build:
       # Server Dockefile emplacement
       context: ./backend
+      target: development
     volumes:
       # bind mount enabling modifications on the host
       - .:/project
-      # - ./frontend/src:/project/frontend	
     ports:
       - 8000:8000
     environment:
+      - DEBUG=${DEBUG:-False}
+      - SUPERUSER_USERNAME=${SUPERUSER_USERNAME}
+      - SUPERUSER_EMAIL=${SUPERUSER_EMAIL}
+      - SUPERUSER_PASSWORD=${SUPERUSER_PASSWORD}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -25,10 +32,12 @@ services:
     build:
       # Frontend Dockefile emplacement
       context: ./frontend
+      target: development
     volumes:
-      # bind mount enabling modifications on the host (app is not the same as for the server)
+      # bind mount enabling modifications on the host 
+      # (app is not the same as for the server) since it is a different container
       - ./frontend:/app
-      - node_modules:/app/node_modules
+      - /app/node_modules # to save in container modifications
     ports:
       - "5173:5173"
     environment:
@@ -51,7 +60,7 @@ services:
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     expose:
       - 5432
     healthcheck:
@@ -63,8 +72,3 @@ services:
 volumes:
   db-data:
   node_modules:
-
-# Useful for production (in dev, the global .env is used)
-secrets:
-  db-password:
-    file: "secrets/db_password.txt"

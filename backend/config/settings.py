@@ -55,7 +55,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",        # si React tourne sur host
+    "http://localhost:5173",        # if React is on the host
 ]
 
 ROOT_URLCONF = 'config.urls'
